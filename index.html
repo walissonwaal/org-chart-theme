@@ -1,0 +1,235 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+</head>
+
+<body style="margin: 0; padding: 0;">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@2.6.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
+  <div class="chart-container" style="height: 100svh; background-color: #3c3c3c"></div>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+
+  <script>
+    var chart;
+    d3.csv(
+      'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJXsTGuEWKef1hFSAj8gLBT7bE61f4CyRgncn7dLkL5t_ScuwLrnFUcGra_RDN7aFJYiMASigzDRL5/pub?gid=0&single=true&output=csv'
+    ).then(dataFlattened => {
+      chart = new d3.OrgChart()
+        .container('.chart-container')
+        .svgHeight(window.innerHeight - 10)
+        .data(dataFlattened)
+        .nodeHeight(d => 200)
+        .nodeWidth(d => {
+          return 300;
+        })
+        .childrenMargin(d => 100)
+        .compactMarginBetween(d => 100)
+        .compactMarginPair(d => 50)
+        .neightbourMargin((a, b) => 25)
+        .siblingsMargin(d => 25)
+        .buttonContent(({ node, state }) => {
+          return `<div style="position: relative;bottom: 20px;color:#565656;border-radius:3px;padding:4px;font-size:10px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
+            ? `<i class="fas fa-angle-up"></i>`
+            : `<i class="fas fa-angle-down"></i>`
+            }</span> ${node.data._directSubordinates}  </div>`;
+          // return `<div style="position: relative;bottom: 20px;color:#4B4B4B;border-radius:3px;width:20px; height: 20px; display: flex; justify-content: center; align-items: center;font-size:16px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px"></span> ${node.data._directSubordinates}</div>`;
+        })
+        .linkUpdate(function (d, i, arr) {
+          d3.select(this)
+            .attr('stroke', d =>
+              d.data._upToTheRootHighlighted ? '#152785' : '#E4E2E9'
+            )
+            .attr('stroke-width', d =>
+              d.data._upToTheRootHighlighted ? 5 : 1
+            );
+
+          if (d.data._upToTheRootHighlighted) {
+            d3.select(this).raise();
+          }
+        })
+        .nodeContent(function (d, i, arr, state) {
+          const color = '#FFFFFF';
+          return `
+            <div class="container" style="font-family: 'Raleway', sans-serif; font-weight:700; ;background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:20px;">
+              <div class="top-bar-container">
+        <div class="top-bar"></div>
+    </div>
+    <div style="display: flex; justify-content: center;">
+    <img src="${d.data.img_url}" style="position: absolute; margin-top: -50px; border-radius: 100px; width: 100px; height: 100px; object-fit: cover; border: 5px solid white;" />
+</div>
+
+
+
+              <div style="height: 100%; font-size:25px; color:#4B4B4B; display: flex; flex-direction: column; align-items: center; justify-content: center;"> ${d.data.first_name} 
+              <div style="color:#909090;font-size:16px; font-weight: 600;"> ${d.data.department_name} </div>
+              </div>
+              
+
+
+           </div>
+
+           <style>
+            .container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    background-color: #fff;
+}
+
+.top-bar-container {
+    width: 100%;
+    height: 20px;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.top-bar {
+    width: 100%;
+    height: 7px;
+    background-color: #0165B1;
+}
+
+.btn {
+        margin: 3px;
+        color: inherit;
+        text-transform: uppercase;
+        word-wrap: break-word;
+        white-space: normal;
+        cursor: pointer;
+        border: 0;
+        border-radius: 0.125rem;
+        -webkit-box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%),
+          0 2px 10px 0 rgb(0 0 0 / 12%);
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+        -webkit-transition: color 0.15s ease-in-out,
+          background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+          -webkit-box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+          -webkit-box-shadow 0.15s ease-in-out;
+        padding: 0.84rem 2.14rem;
+        font-size: 0.81rem;
+        display: inline-block;
+        font-weight: 400;
+        color: #212529;
+        text-align: center;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+      }
+
+      .btn-action-button {
+        text-transform: lowercase;
+        font-size: 11px !important;
+        border-radius: 7px !important;
+        color: white !important;
+        padding: 4px 5px !important;
+        background-color: #0165B1 !important;
+      }
+
+      .action-buttons {
+        position: absolute;
+        top: 10px;
+        right: 35px;
+      }
+
+      .svg-chart-container:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, #04192b 0, #000b0e 100%);
+      }
+
+            </style>
+  `;
+        })
+        .render();
+    });
+
+    // function downloadPdf() {
+    //   chart.exportImg({
+    //     save: false,
+    //     onLoad: (base64) => {
+    //       var pdf = new jspdf.jsPDF();
+    //       var img = new Image();
+    //       img.src = base64;
+    //       img.onload = function () {
+    //         pdf.addImage(
+    //           img,
+    //           'JPEG',
+    //           5,
+    //           5,
+    //           595 / 3,
+    //           ((img.height / img.width) * 595) / 3
+    //         );
+    //         pdf.save('chart.pdf');
+    //       };
+    //     },
+    //   });
+    // }
+  </script>
+
+  <div class="action-buttons">
+    <button onclick="chart.fit()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-sync"></i> Center
+    </button>
+    <br />
+    <button onclick="chart.exportImg()" class="btn btn-action-button waves-effect waves-light">
+      <i class="far fa-images"></i> export img
+    </button>
+    <br />
+
+    <button onclick="chart.exportImg({full:true})" class="btn btn-action-button waves-effect waves-light">
+      <i class="far fa-images"></i> export full img
+    </button>
+    <br />
+
+    <button onclick="chart.exportSvg()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-file-download"></i> export svg
+    </button>
+    <br />
+    <button onclick="chart.expandAll()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-angle-double-down"></i> expand all</button><br />
+
+    <button onclick="chart.collapseAll()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-angle-double-up"></i> collapse all</button><br />
+
+    <button onclick="downloadPdf()" class="btn btn-action-button waves-effect waves-light">
+      <i class="far fa-file-pdf"></i> export pdf
+    </button>
+    <br />
+
+    <button onclick="chart.zoomOut()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-minus"></i> zoom out</button><br />
+    <button onclick="chart.zoomIn()" class="btn btn-action-button waves-effect waves-light">
+      <i class="fas fa-plus"></i> zoom in
+    </button>
+    <br />
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+  <script src="./js/pieChart.js"></script>
+</body>
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
+
+</html>
