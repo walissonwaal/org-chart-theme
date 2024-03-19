@@ -2,9 +2,34 @@
 
 <head>
   <meta charset="UTF-8" />
+  <script src="./js/modal.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./css/modal.css">
 </head>
 
 <body style="margin: 0; padding: 0;">
+
+  <!-- Contêiner de Fundo -->
+  <div id="modalBackground" style="display: none;">
+    <!-- Modal -->
+    <div id="cardModal" class="bg-zinc-800 text-white max-w-lg">
+      <div class="w-full flex justify-between">
+        <div class="flex">
+          <div class="card-image">
+            <img id="image" src="" alt="">
+          </div>
+          <div class="card-info">
+            <h2 id="modalTitle"></h2>
+            <h4 id="modalDepartmentName"></h4>
+            <p id="modalBody"></p>
+          </div>
+          <span class="close cursor-pointer" onclick="handleCloseModal()">&times;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@2.6.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
@@ -12,13 +37,57 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
 
   <script>
+    // Variável global para armazenamento dos dados da planilha
+    let dataFlattenedGlobal = [];
+    // Variável que armazena o nó atual
+    let currentNodeData = null;
+
+    // Atualiza o modal se outro nó é clicado
+    function modalUpdate() {
+      if (currentNodeData) {
+        document.getElementById('modalTitle').textContent = currentNodeData.first_name;
+        document.getElementById('modalDepartmentName').textContent = currentNodeData.department_name;
+        // document.getElementById('modalBody').textContent = currentNodeData.body;
+        document.getElementById('image').src = currentNodeData.img_url;
+      }
+    }
+
+    // Obtém o modal
+    let modalBackground = document.getElementById('modalBackground');
+
+    let modal = document.getElementById('cardModal');
+    // Obtém o close do modal
+    let span = document.getElementsByClassName('close')[0];
+
+    // Abre o modal
+    function handleOpenModal() {
+      modalUpdate()
+      modal.style.display = 'block';
+      modalBackground.style.display = 'block';
+    }
+    // Fecha o modal
+    function handleCloseModal() {
+      modal.style.display = 'none';
+      modalBackground.style.display = 'none';
+    }
+
+    // Fechar modal ao clicar fora
+    window.onclick = function (event) {
+      if (event.target == modalBackground) {
+        modalBackground.style.display = 'none';
+        modal.style.display = 'none';
+      }
+    };
+
+    // Definição do organograma
     var chart;
     d3.csv(
       'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJXsTGuEWKef1hFSAj8gLBT7bE61f4CyRgncn7dLkL5t_ScuwLrnFUcGra_RDN7aFJYiMASigzDRL5/pub?gid=0&single=true&output=csv'
     ).then(dataFlattened => {
+      dataFlattenedGlobal = dataFlattened
       chart = new d3.OrgChart()
         .container('.chart-container')
-        .svgHeight(window.innerHeight - 10)
+        .svgHeight(window.innerHeight)
         .data(dataFlattened)
         .nodeHeight(d => 200)
         .nodeWidth(d => {
@@ -29,8 +98,14 @@
         .compactMarginPair(d => 50)
         .neightbourMargin((a, b) => 25)
         .siblingsMargin(d => 25)
+        // Captura o click no nó
+        .onNodeClick((d) => {
+          setData(d);
+          handleOpenModal();
+        })
+        // Botão para exibir filhos dos nós
         .buttonContent(({ node, state }) => {
-          return `<div style="position: relative;bottom: 20px;color:#565656;border-radius:3px;padding:4px;font-size:10px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
+          return `<div style="position: relative;color:#565656;border-radius:3px;padding:4px;font-size:10px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
             ? `<i class="fas fa-angle-up"></i>`
             : `<i class="fas fa-angle-down"></i>`
             }</span> ${node.data._directSubordinates}  </div>`;
@@ -49,6 +124,7 @@
             d3.select(this).raise();
           }
         })
+        // Conteúdo do nó
         .nodeContent(function (d, i, arr, state) {
           const color = '#FFFFFF';
           return `
@@ -69,6 +145,10 @@
 
 
            </div>
+
+
+          //  Modal
+          
 
            <style>
             .container {
@@ -165,29 +245,23 @@
         .render();
     });
 
-    // function downloadPdf() {
-    //   chart.exportImg({
-    //     save: false,
-    //     onLoad: (base64) => {
-    //       var pdf = new jspdf.jsPDF();
-    //       var img = new Image();
-    //       img.src = base64;
-    //       img.onload = function () {
-    //         pdf.addImage(
-    //           img,
-    //           'JPEG',
-    //           5,
-    //           5,
-    //           595 / 3,
-    //           ((img.height / img.width) * 595) / 3
-    //         );
-    //         pdf.save('chart.pdf');
-    //       };
-    //     },
-    //   });
-    // }
+    // Obtém os dados do nó pelo id
+    function getNodeDataById(nodeId) {
+      return dataFlattenedGlobal.find(node => node.id === nodeId);
+    }
+
+    // Atualiza o currentNodeData com os dados do nó clicado e o modal
+    function setData(nodeId) {
+      const nodeData = getNodeDataById(nodeId);
+      if (nodeData) {
+        currentNodeData = nodeData;
+        modalUpdate();
+      }
+    }
+
   </script>
 
+  <!-- Botões de ações -->
   <div class="action-buttons">
     <button onclick="chart.fit()" class="btn btn-action-button waves-effect waves-light">
       <i class="fas fa-sync"></i> Center

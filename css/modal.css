@@ -1,0 +1,41 @@
+#modalBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+#cardModal {
+  background-color: #fff;
+  border-radius: 25px;
+}
+
+#card-image {
+  width: 8rem;
+}
+
+#image {
+  border-radius: 25px 0 0 25px;
+  object-fit: center;
+}
+
+#modalTitle {
+  font-size: 30px;
+  line-height: 37.8px;
+  color: #0165b1;
+  font-weight: 700;
+}
+
+#modalDepartmentName {
+  font-size: 20px;
+  line-height: 24px;
+  color: #7c7c7c;
+  font-weight: 300;
+}
