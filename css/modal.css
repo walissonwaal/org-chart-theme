@@ -1,12 +1,9 @@
 #modalBackground {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
+  height: 100svh;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
-  display: none;
   justify-content: center;
   align-items: center;
   z-index: 1;
@@ -15,15 +12,32 @@
 #cardModal {
   background-color: #fff;
   border-radius: 25px;
+  max-width: 50rem;
+}
+
+.separator {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 2rem 0;
+  background-color: #dedede;
 }
 
 #card-image {
-  width: 8rem;
+  height: 100%;
+  background-color: #0165b1;
 }
 
 #image {
+  height: 100%;
+  object-fit: cover;
   border-radius: 25px 0 0 25px;
   object-fit: center;
+}
+
+.card-info {
+  max-width: 70%;
+  padding: 1rem 2rem;
 }
 
 #modalTitle {
@@ -38,4 +52,26 @@
   line-height: 24px;
   color: #7c7c7c;
   font-weight: 300;
+}
+
+#modalBody {
+  line-height: 24px;
+  font-size: 16px;
+  font-weight: 300;
+  color: #7c7c7c;
+}
+
+.contact {
+  display: flex;
+  justify-content: space-between;
+  color: #7c7c7c;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16.38px;
+}
+
+.close {
+  cursor: pointer;
+  padding: 0 2rem;
 }
