@@ -6,6 +6,7 @@ class PieChart {
       svgWidth: 400,
       svgHeight: 400,
       marginTop: 75,
+      nodeButtonY: d => 200,
       image: '',
       marginBottom: 75,
       marginRight: 105,

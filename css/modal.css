@@ -73,6 +73,10 @@
   line-height: 16.38px;
 }
 
+.icone-telefone {
+  width: 12px;
+}
+
 .close {
   cursor: pointer;
   padding: 0 2rem;

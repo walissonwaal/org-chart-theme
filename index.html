@@ -52,9 +52,14 @@
         document.getElementById('modalTitle').textContent = currentNodeData.first_name;
         document.getElementById('modalDepartmentName').textContent = currentNodeData.department_name;
         document.getElementById('modalBody').textContent = currentNodeData.bio;
-        document.getElementById('phone').textContent = "Telefone: " + currentNodeData.phone;
-        document.getElementById('email').textContent = "E-mail: " + currentNodeData.email;
         document.getElementById('image').src = currentNodeData.img_url;
+
+        // icones
+        let phoneIconPath = '/imgs/phone.svg';
+        let emailIconPath = '/imgs/mail.svg';
+
+        document.getElementById('phone').innerHTML = `<div style="display: flex; gap: 10px;"><img src="${phoneIconPath}" class="icone-telefone" alt="Telefone" /> ${currentNodeData.phone}</div>`;
+        document.getElementById('email').innerHTML = `<div style="display: flex; gap: 10px;"><img src="${emailIconPath}" class="icone-telefone" alt="Telefone" /> ${currentNodeData.email}</div>`;
       }
     }
 
@@ -91,7 +96,10 @@
       'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJXsTGuEWKef1hFSAj8gLBT7bE61f4CyRgncn7dLkL5t_ScuwLrnFUcGra_RDN7aFJYiMASigzDRL5/pub?gid=0&single=true&output=csv'
     ).then(dataFlattened => {
       dataFlattenedGlobal = dataFlattened
-      chart = new d3.OrgChart()
+
+      let chart = new d3.OrgChart();
+
+      chart
         .container('.chart-container')
         .svgHeight(window.innerHeight)
         .data(dataFlattened)
@@ -99,10 +107,10 @@
         .nodeWidth(d => {
           return 300;
         })
-        .childrenMargin(d => 100)
+        .childrenMargin(d => 150)
         .compactMarginBetween(d => 100)
         .compactMarginPair(d => 100)
-        .neightbourMargin((a, b) => 25)
+        .neightbourMargin((a, b) => 100)
         .siblingsMargin(d => 25)
         // Captura o click no nó
         .onNodeClick((d) => {
@@ -111,10 +119,10 @@
         })
         // Botão para exibir filhos dos nós
         .buttonContent(({ node, state }) => {
-          return `<div style="position: relative;bottom: 20px; color:#565656;border-radius:3px;padding:4px;font-size:10px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
+          return `<div style="position: relative; color:#565656;border-radius:3px;padding:6px;font-size:10px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
             ? `<i class="fas fa-angle-up"></i>`
             : `<i class="fas fa-angle-down"></i>`
-            }</span> ${node.data._directSubordinates}</div>`;
+            }</span></div>`;
           // return `<div style="position: relative;bottom: 20px;color:#4B4B4B;border-radius:3px;width:20px; height: 20px; display: flex; justify-content: center; align-items: center;font-size:16px;margin:auto auto;background-color:#D9D9D9;border: 1px solid #E4E2E9"> <span style="font-size:9px"></span> ${node.data._directSubordinates}</div>`;
         })
         .linkUpdate(function (d, i, arr) {
@@ -244,6 +252,9 @@
         .render();
     });
 
+    let nodeButton = document.getElementsByClassName('node-button-foreign-object');
+    nodeButton.y = -40;
+
     // Obtém os dados do nó pelo id
     function getNodeDataById(nodeId) {
       return dataFlattenedGlobal.find(node => node.id === nodeId);
@@ -299,9 +310,9 @@
     <br />
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script> -->
 
-  <script src="./js/pieChart.js"></script>
+  <!-- <script src="./js/pieChart.js"></script> -->
 </body>
 <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 
