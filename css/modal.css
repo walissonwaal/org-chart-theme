@@ -42,6 +42,13 @@
   padding: 1rem 2rem;
 }
 
+.card-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 #modalTitle {
   font-size: 30px;
   line-height: 37.8px;
@@ -78,8 +85,9 @@
 }
 
 .close {
+  color: #7c7c7c;
+  font-size: 30px;
   cursor: pointer;
-  padding: 0 2rem;
 }
 
 @keyframes modalAnimation {
