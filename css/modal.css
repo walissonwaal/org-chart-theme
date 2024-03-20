@@ -88,6 +88,10 @@
   color: #7c7c7c;
   font-size: 30px;
   cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.close:hover {
+  color: #7c7c7c8a;
 }
 
 @keyframes modalAnimation {
