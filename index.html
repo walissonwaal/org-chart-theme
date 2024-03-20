@@ -97,9 +97,7 @@
     ).then(dataFlattened => {
       dataFlattenedGlobal = dataFlattened
 
-      let chart = new d3.OrgChart();
-
-      chart
+      chart = new d3.OrgChart()
         .container('.chart-container')
         .svgHeight(window.innerHeight)
         .data(dataFlattened)
@@ -107,10 +105,10 @@
         .nodeWidth(d => {
           return 300;
         })
-        .childrenMargin(d => 150)
+        .childrenMargin(d => 100)
         .compactMarginBetween(d => 100)
         .compactMarginPair(d => 100)
-        .neightbourMargin((a, b) => 100)
+        .neightbourMargin((a, b) => 25)
         .siblingsMargin(d => 25)
         // Captura o click no nó
         .onNodeClick((d) => {
@@ -274,38 +272,38 @@
   <!-- Botões de ações -->
   <div class="action-buttons">
     <button onclick="chart.fit()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-sync"></i> Center
+      <i class="fas fa-sync"></i> Centralizar
     </button>
     <br />
     <button onclick="chart.exportImg()" class="btn btn-action-button waves-effect waves-light">
-      <i class="far fa-images"></i> export img
+      <i class="far fa-images"></i> Exportar PNG
     </button>
     <br />
 
     <button onclick="chart.exportImg({full:true})" class="btn btn-action-button waves-effect waves-light">
-      <i class="far fa-images"></i> export full img
+      <i class="far fa-images"></i> Exportar Full PNG
     </button>
     <br />
 
     <button onclick="chart.exportSvg()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-file-download"></i> export svg
+      <i class="fas fa-file-download"></i> Exportar SVG
     </button>
     <br />
     <button onclick="chart.expandAll()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-angle-double-down"></i> expand all</button><br />
+      <i class="fas fa-angle-double-down"></i> Expandir tudo</button><br />
 
     <button onclick="chart.collapseAll()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-angle-double-up"></i> collapse all</button><br />
+      <i class="fas fa-angle-double-up"></i> Recolher tudo</button><br />
 
-    <button onclick="downloadPdf()" class="btn btn-action-button waves-effect waves-light">
+    <!-- <button onclick="downloadPdf()" class="btn btn-action-button waves-effect waves-light">
       <i class="far fa-file-pdf"></i> export pdf
     </button>
-    <br />
+    <br /> -->
 
     <button onclick="chart.zoomOut()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-minus"></i> zoom out</button><br />
+      <i class="fas fa-minus"></i> Zoom OUT</button><br />
     <button onclick="chart.zoomIn()" class="btn btn-action-button waves-effect waves-light">
-      <i class="fas fa-plus"></i> zoom in
+      <i class="fas fa-plus"></i> Zoom IN
     </button>
     <br />
   </div>
